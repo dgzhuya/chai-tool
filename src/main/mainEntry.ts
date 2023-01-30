@@ -1,16 +1,20 @@
 import { startAdbServer } from '@/adb/status'
+import { getResourcePath } from '@/utils/system'
 import { app, BrowserWindow, Menu, protocol } from 'electron'
 import path from 'path'
 import { CustomScheme } from './CustomScheme'
 
 let mainWindow: BrowserWindow
 
+let resourcePath = ''
+
 app.whenReady().then(() => {
+	if (!resourcePath) resourcePath = getResourcePath()
 	Menu.setApplicationMenu(null)
 	startAdbServer()
 	protocol.registerFileProtocol('atom', (request, callback) => {
-		const url = request.url.slice(7 - 1)
-		callback(decodeURI(path.normalize(`${process.cwd()}/resources/${url}`)))
+		const url = request.url.slice(8)
+		callback(decodeURI(path.normalize(path.resolve(resourcePath, url))))
 	})
 	mainWindow = new BrowserWindow({
 		show: false,

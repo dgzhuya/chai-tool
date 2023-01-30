@@ -1,7 +1,15 @@
 import { ViteDevServer, Plugin } from 'vite'
 import { buildSync } from 'esbuild'
 import { execSync, spawn, spawnSync } from 'child_process'
-import { getExecPath } from './system'
+import os from 'os'
+import path from 'path'
+
+const getExecPath = () =>
+	os.platform() === 'win32'
+		? 'resources\\win\\adb.exe'
+		: os.platform() === 'darwin' && process.env.NODE_ENV !== 'development'
+		? path.resolve(__dirname, '../../adb')
+		: 'resources/win/adb'
 
 export default function devPlugin(): Plugin {
 	return {

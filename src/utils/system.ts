@@ -1,5 +1,6 @@
 import os from 'os'
 import { execCommand } from '@/utils/command'
+import path from 'path'
 
 /**
  * 当前电脑环境是否为win
@@ -16,7 +17,17 @@ export const isMac = () => os.platform() === 'darwin'
  * 获取adb执行文件位置
  * @returns string
  */
-export const getExecPath = () => (isWin() ? 'resources\\win\\adb.exe' : 'resources/mac/adb')
+export const getExecPath = () =>
+	isWin()
+		? 'resources\\win\\adb.exe'
+		: isMac() && process.env.NODE_ENV !== 'development'
+		? path.resolve(__dirname, '../../adb')
+		: 'resources/win/adb'
+
+export const getResourcePath = () =>
+	isMac() && process.env.NODE_ENV !== 'development'
+		? path.resolve(__dirname, '../../')
+		: path.resolve(process.cwd(), 'resources')
 
 // adb状态
 let adbStatus: boolean | undefined
@@ -31,6 +42,7 @@ export const checkADBEnv = async () => {
 			await execCommand('adb version')
 			adbStatus = true
 		} catch (error) {
+			console.log('error: ', error)
 			adbStatus = false
 		}
 	}

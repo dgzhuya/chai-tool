@@ -2,11 +2,12 @@ import childProcess from 'child_process'
 import os from 'os'
 import { getAdbExec } from './system'
 
-const iconv = require('iconv-lite')
+const { decode } = require('iconv-lite')
 
-const binaryEncoding = 'binary'
+let adbExecPath = ''
+const isWinSystem = os.platform() === 'win32'
+const execEncoding = isWinSystem ? 'binary' : 'utf-8'
 const defaultCwd = process.cwd()
-const encoding = os.platform() === 'win32' ? 'cp936' : 'utf-8'
 
 /**
  * 执行系统命令
@@ -15,11 +16,11 @@ const encoding = os.platform() === 'win32' ? 'cp936' : 'utf-8'
  */
 export const execCommand = (command: string, cwd = defaultCwd) => {
 	return new Promise<string>((resolve, reject) => {
-		childProcess.exec(command, { encoding: binaryEncoding, cwd }, (error, stdout) => {
+		childProcess.exec(command, { encoding: execEncoding, cwd }, (error, stdout) => {
 			if (error) {
-				reject(iconv.decode(Buffer.from(error.message, binaryEncoding), encoding))
+				reject(isWinSystem ? decode(Buffer.from(error.message, execEncoding), 'cp936') : error.message)
 			} else {
-				resolve(iconv.decode(Buffer.from(stdout, binaryEncoding), encoding))
+				resolve(isWinSystem ? decode(Buffer.from(stdout, execEncoding), 'cp936') : stdout)
 			}
 		})
 	})
@@ -29,24 +30,25 @@ export const execCommand = (command: string, cwd = defaultCwd) => {
  * 执行adb命令
  * @param command adb命令
  */
-export const execAdbCommand = async (command: string) => execCommand(`${await getAdbExec()} ${command}`)
+export const execAdbCommand = async (command: string) => {
+	if (!adbExecPath) adbExecPath = await getAdbExec()
+	return execCommand(`${adbExecPath} ${command}`)
+}
 
 /**
  * 执行adb的shell命令
  * @param command shell命令
  */
-export const execAdbShell = async (command: string) => execCommand(`${await getAdbExec()} shell ${command}`)
+export const execAdbShell = (command: string) => execAdbCommand(`shell ${command}`)
 
 /**
  * 执行某个设备adb命令
  * @param command adb命令
  */
-export const execAdbCommandById = async (id: string, command: string) =>
-	execCommand(`${await getAdbExec()} -s ${id} ${command}`)
+export const execAdbCommandById = async (id: string, command: string) => execAdbCommand(` -s ${id} ${command}`)
 
 /**
  * 执行某个设备adb的shell命令
  * @param command shell命令
  */
-export const execAdbShellById = async (id: string, command: string) =>
-	execCommand(`${await getAdbExec()} -s ${id} shell ${command}`)
+export const execAdbShellById = (id: string, command: string) => execAdbCommandById(id, `shell ${command}`)
