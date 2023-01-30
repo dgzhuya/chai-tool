@@ -9,7 +9,7 @@ app.whenReady().then(() => {
 	startAdbServer()
 	mainWindow = new BrowserWindow({
 		show: false,
-		width: 900,
+		width: process.argv[2] ? 1500 : 900,
 		height: 660,
 		webPreferences: {
 			nodeIntegration: true,
@@ -26,6 +26,7 @@ app.whenReady().then(() => {
 	})
 	if (process.argv[2]) {
 		mainWindow.loadURL(process.argv[2])
+		mainWindow.webContents.openDevTools({ mode: 'right' })
 	} else {
 		CustomScheme.registerScheme()
 		mainWindow.loadURL('app://index.html')
