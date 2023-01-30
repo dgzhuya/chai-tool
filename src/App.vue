@@ -303,7 +303,6 @@
 			}
 
 			.step-container {
-				margin-top: 20px;
 				width: 100%;
 				box-sizing: border-box;
 				padding: 0 20px;
