@@ -7,9 +7,11 @@ import path from 'path'
 const getExecPath = () =>
 	os.platform() === 'win32'
 		? 'resources\\win\\adb.exe'
-		: os.platform() === 'darwin' && process.env.NODE_ENV !== 'development'
-		? path.resolve(__dirname, '../../adb')
-		: 'resources/win/adb'
+		: os.platform() === 'darwin'
+		? process.env.NODE_ENV !== 'development'
+			? path.resolve(__dirname, '../../adb')
+			: 'resources/mac/adb'
+		: 'resources/linux/adb'
 
 export default function devPlugin(): Plugin {
 	return {
