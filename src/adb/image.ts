@@ -5,7 +5,7 @@ import fs from 'fs'
 
 const fileDirPath =
 	os.platform() === 'darwin'
-		? process.env.NODE_ENV !== 'development'
+		? process.argv.length !== 3
 			? path.resolve(__dirname, '../../')
 			: path.resolve(process.cwd(), 'resources')
 		: 'resources'
