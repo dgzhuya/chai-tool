@@ -37,3 +37,4 @@ app.whenReady().then(() => {
 		mainWindow.loadURL('app://index.html')
 	}
 })
+

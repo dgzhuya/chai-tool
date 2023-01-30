@@ -117,7 +117,13 @@
 		</div>
 		<div class="setting-container">
 			<div class="setting-cell">
-				<el-select v-model="activeDeviceId" class="m-2" placeholder="请选择设备" size="large">
+				<el-select
+					v-model="activeDeviceId"
+					style="width: 300px"
+					class="m-2"
+					placeholder="请选择设备"
+					size="large"
+				>
 					<el-option
 						v-for="item in deviceList"
 						:key="item.id"
@@ -125,7 +131,7 @@
 						:value="item.id"
 					/>
 				</el-select>
-				<el-button type="primary" style="margin-left: 10px" size="large" @click="checkAdbDevices()">
+				<el-button type="primary" size="large" @click="checkAdbDevices()">
 					<img class="icon-img" :src="refreshSvg" alt="" />
 					刷新设备
 				</el-button>
@@ -229,6 +235,7 @@
 		display: flex;
 		width: 100vw;
 		height: 100vh;
+		font-size: 18px;
 		border-top: 1px solid rgba($color: #999, $alpha: 0.3);
 		box-sizing: border-box;
 
