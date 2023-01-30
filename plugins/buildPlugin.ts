@@ -3,7 +3,6 @@ import { buildSync } from 'esbuild'
 import path from 'path'
 import fs from 'fs'
 import { build } from 'electron-builder'
-import { isMac } from './system'
 
 class BuildObj {
 	buildMain() {
@@ -32,12 +31,20 @@ class BuildObj {
 		return build({
 			projectDir: process.cwd(),
 			config: {
-				extraFiles: [isMac() ? 'resources/mac/' : 'resources/win/'],
 				win: {
 					target: [
 						{
 							target: 'nsis',
 							arch: ['x64']
+						}
+					],
+					extraFiles: ['resources/win/']
+				},
+				mac: {
+					extraFiles: [
+						{
+							from: 'resources/mac/adb',
+							to: './Resources/adb'
 						}
 					]
 				},
