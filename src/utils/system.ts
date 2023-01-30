@@ -20,14 +20,11 @@ export const isMac = () => os.platform() === 'darwin'
 export const getExecPath = () =>
 	isWin()
 		? 'resources\\win\\adb.exe'
-		: isMac() && process.env.NODE_ENV !== 'development'
-		? path.resolve(__dirname, '../../adb')
-		: 'resources/win/adb'
-
-export const getResourcePath = () =>
-	isMac() && process.env.NODE_ENV !== 'development'
-		? path.resolve(__dirname, '../../')
-		: path.resolve(process.cwd(), 'resources')
+		: isMac()
+		? process.env.NODE_ENV !== 'development'
+			? path.resolve(__dirname, '../../adb')
+			: 'resources/mac/adb'
+		: 'resources/linux/adb'
 
 // adb状态
 let adbStatus: boolean | undefined
