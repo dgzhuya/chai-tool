@@ -14,7 +14,7 @@ app.whenReady().then(() => {
 	})
 	mainWindow = new BrowserWindow({
 		show: false,
-		width: 900,
+		width: 1500,
 		height: 660,
 		webPreferences: {
 			nodeIntegration: true,
@@ -31,10 +31,9 @@ app.whenReady().then(() => {
 	})
 	if (process.argv[2]) {
 		mainWindow.loadURL(process.argv[2])
-		// mainWindow.webContents.openDevTools({ mode: 'right' })
+		mainWindow.webContents.openDevTools({ mode: 'right' })
 	} else {
 		CustomScheme.registerScheme()
 		mainWindow.loadURL('app://index.html')
 	}
 })
-

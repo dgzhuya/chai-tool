@@ -1,22 +1,22 @@
 <script setup lang="ts">
 	import { ElButton, ElSelect, ElOption, ElInput, ElMessage, ElMessageBox, ElInputNumber } from 'element-plus'
 	import { onMounted, ref } from 'vue'
-	import defaultSvg from '@/assets/default.svg'
-	import refreshSvg from '@/assets/refresh.svg'
 	import runSvg from '@/assets/run.svg'
 	import saveSvg from '@/assets/save.svg'
 	import playSvg from '@/assets/play.svg'
 	import closeSvg from '@/assets/close.svg'
 	import deleteSvg from '@/assets/delete.svg'
-	import useRecordSteps from '@/effcet/recordSteps'
-	import useMouseTap from '@/effcet/mouseTap'
-	import useDevices, { activeDeviceId, deviceList } from '@/effcet/devices'
-	import useScreen from '@/effcet/screen'
+	import defaultSvg from '@/assets/default.svg'
+	import refreshSvg from '@/assets/refresh.svg'
 	import useRun from '@/effcet/run'
+	import useScreen from '@/effcet/screen'
+	import useMouseTap from '@/effcet/mouseTap'
+	import useRecordSteps from '@/effcet/recordSteps'
+	import useDevices, { activeDeviceId, deviceList } from '@/effcet/devices'
 	import { TapStep } from './types/tap'
 
 	const currentStepName = ref<string>('')
-	const { checkAdbDevices } = useDevices()
+	const { checkAdbDevices, noDeviceHandler } = useDevices()
 	const { showImgUrl, refreshImg } = useScreen(defaultSvg)
 	const { isRun, stopRun, stepSleep, recordSleep, runTime, curTime, runTapHandler, execStepsHandler } = useRun()
 	const { isRecordingStatus, activeDeviceSteps, saveCurStepHandler, deleteRecordHandler } = useRecordSteps()
@@ -30,6 +30,11 @@
 		if (isRecordingStatus.value) {
 			mousePointHandler(event)
 		}
+	}
+
+	const startRecordRask = () => {
+		if (noDeviceHandler()) return
+		isRecordingStatus.value = true
 	}
 
 	/**
@@ -119,7 +124,7 @@
 			<div class="setting-cell">
 				<el-select
 					v-model="activeDeviceId"
-					style="width: 300px"
+					style="width: 250px; margin-right: 15px"
 					class="m-2"
 					placeholder="请选择设备"
 					size="large"
@@ -171,7 +176,7 @@
 				</div>
 			</template>
 			<div v-else class="setting-cell">
-				<el-button type="primary" style="margin-left: 10px" size="large" @click="isRecordingStatus = true">
+				<el-button type="primary" size="large" @click="startRecordRask()">
 					<img class="icon-img" :src="runSvg" alt="" />
 					开始录制
 				</el-button>
@@ -238,6 +243,7 @@
 		font-size: 18px;
 		border-top: 1px solid rgba($color: #999, $alpha: 0.3);
 		box-sizing: border-box;
+		background-color: #f6f7f9;
 
 		.show-screen {
 			width: 40vw;
@@ -300,19 +306,19 @@
 				margin-top: 20px;
 				width: 100%;
 				box-sizing: border-box;
-				padding: 0 10px;
+				padding: 0 20px;
 				max-height: 400px;
 				overflow-y: auto;
 				overflow-x: hidden;
 
 				.step-cell {
 					display: flex;
-					background-color: rgb(238, 238, 247);
-					line-height: 50px;
+					background-color: #fff;
+					line-height: 66px;
 					margin-bottom: 20px;
 					box-sizing: border-box;
 					padding: 0 25px 0 10px;
-					border-radius: 5px;
+					border-radius: 10px;
 					justify-content: space-between;
 					position: relative;
 
@@ -334,14 +340,14 @@
 					.play-icon {
 						width: 28px;
 						height: 28px;
-						margin: 12px 0px;
+						margin: 19px 0px;
 					}
 					.delete-icon {
 						position: absolute;
 						width: 15px;
 						height: 15px;
-						right: 5px;
-						top: 2px;
+						right: 7px;
+						top: 5px;
 					}
 				}
 			}

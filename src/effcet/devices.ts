@@ -1,6 +1,6 @@
 import { getAdbDevices } from '@/adb/status'
-import { computed, ref, watchEffect } from 'vue'
-import { ElLoading } from 'element-plus'
+import { computed, ref } from 'vue'
+import { ElLoading, ElMessage } from 'element-plus'
 import { DeviceType } from '@/types/devices'
 
 export const deviceList = ref<DeviceType[]>([])
@@ -8,6 +8,14 @@ export const activeDeviceId = ref('')
 export const activeDevice = computed(() => deviceList.value.find(i => i.id === activeDeviceId.value))
 
 export default function devices() {
+	const noDeviceHandler = () => {
+		if (!activeDeviceId.value) {
+			ElMessage.error('请接入设备')
+			return true
+		}
+		return false
+	}
+
 	const checkAdbDevices = async (isLoading = false) => {
 		let loading
 		if (isLoading) {
@@ -22,10 +30,13 @@ export default function devices() {
 			if (deviceList.value.map(i => i.id).indexOf(activeDeviceId.value) === -1) {
 				activeDeviceId.value = deviceList.value[0].id
 			}
+		} else {
+			activeDeviceId.value = ''
 		}
 		loading && loading.close()
 	}
 	return {
-		checkAdbDevices
+		checkAdbDevices,
+		noDeviceHandler
 	}
 }

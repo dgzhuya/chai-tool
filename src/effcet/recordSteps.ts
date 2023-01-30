@@ -11,6 +11,8 @@ export default function recordSteps() {
 		if (activeDeviceId.value.length > 0) {
 			isRecordingStatus.value = false
 			activeDeviceSteps.value = JSON.parse(localStorage.getItem(activeDeviceId.value) || '[]')
+		} else {
+			activeDeviceSteps.value = []
 		}
 	})
 
@@ -55,3 +57,4 @@ export default function recordSteps() {
 		saveCurStepHandler
 	}
 }
+
