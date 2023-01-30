@@ -2,6 +2,8 @@
 	"name": "chai-tool",
 	"private": true,
 	"version": "0.1.0",
+	"author": "dgzhuya",
+	"description": "一个模拟手机点击工具",
 	"scripts": {
 		"dev": "vite",
 		"build": "vue-tsc && vite build",
