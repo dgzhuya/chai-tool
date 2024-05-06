@@ -17,7 +17,6 @@ export const isMac = () => os.platform() === 'darwin'
  * 获取adb执行文件位置
  * @returns string
  */
-console.log('process.argv: ', process.argv)
 export const getExecPath = () =>
 	isWin()
 		? 'resources\\win\\adb.exe'
