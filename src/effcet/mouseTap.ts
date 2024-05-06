@@ -27,7 +27,8 @@ export default function mouseTap() {
 		const { width, height } = event.currentTarget as HTMLImageElement
 		mousePoint.value = {
 			x: (event.offsetX * 100) / width,
-			y: (event.offsetY * 100) / height
+			y: (event.offsetY * 100) / height,
+			isVertical: width > height
 		}
 		showMousePoint.value = true
 	}

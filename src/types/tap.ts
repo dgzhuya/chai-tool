@@ -1,6 +1,7 @@
 export interface Point {
 	x: number
 	y: number
+	isVertical?: boolean
 }
 
 export interface TapStep {
@@ -8,3 +9,4 @@ export interface TapStep {
 	date?: string
 	points: Point[]
 }
+

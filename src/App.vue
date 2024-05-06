@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	import { ElButton, ElSelect, ElOption, ElInput, ElMessage, ElMessageBox, ElInputNumber } from 'element-plus'
-	import { onMounted, ref } from 'vue'
+	import { computed, onMounted, ref } from 'vue'
 	import runSvg from '@/assets/run.svg'
 	import saveSvg from '@/assets/save.svg'
 	import playSvg from '@/assets/play.svg'
@@ -15,6 +15,7 @@
 	import useDevices, { activeDeviceId, deviceList } from '@/effcet/devices'
 	import { TapStep } from './types/tap'
 
+	const imgDOM = ref<HTMLImageElement>()
 	const currentStepName = ref<string>('')
 	const { checkAdbDevices, noDeviceHandler } = useDevices()
 	const { showImgUrl, refreshImg } = useScreen(defaultSvg)
@@ -102,6 +103,13 @@
 			stopRun.value = true
 		})
 	}
+
+	const isVertical = computed(() => {
+		if (imgDOM.value) {
+			return imgDOM.value.width > imgDOM.value.height
+		}
+		return false
+	})
 
 	onMounted(() => {
 		checkAdbDevices(true)
