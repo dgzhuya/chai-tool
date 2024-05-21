@@ -22,9 +22,6 @@ export default function run() {
 		const x = (wm.width * mousePoint.x) / 100
 		const y = (wm.height * mousePoint.y) / 100
 		const config = { x: mousePoint.isVertical ? y : x, y: mousePoint.isVertical ? x : y }
-		console.log('wm: ', wm)
-		console.log('mousePoint: ', mousePoint)
-		console.log('config: ', config)
 		await tapHandler(id, config)
 	}
 

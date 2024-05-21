@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	import { ElButton, ElSelect, ElOption, ElInput, ElMessage, ElMessageBox, ElInputNumber } from 'element-plus'
-	import { computed, onMounted, ref } from 'vue'
+	import { HtmlHTMLAttributes, computed, onMounted, ref } from 'vue'
 	import runSvg from '@/assets/run.svg'
 	import saveSvg from '@/assets/save.svg'
 	import playSvg from '@/assets/play.svg'
@@ -104,12 +104,24 @@
 		})
 	}
 
-	const isVertical = computed(() => {
-		if (imgDOM.value) {
-			return imgDOM.value.width > imgDOM.value.height
-		}
-		return false
+	const isVertical = ref(false)
+
+	const imgCss = computed<HtmlHTMLAttributes['style']>(() => {
+		return isVertical.value
+			? {
+					margin: '0 auto',
+					height: '250px'
+			  }
+			: {
+					margin: '0 auto',
+					width: '250px'
+			  }
 	})
+
+	const imgLoadFunc = (payload: Event) => {
+		const img = payload.target as HTMLImageElement
+		isVertical.value = img.width > img.height
+	}
 
 	onMounted(() => {
 		checkAdbDevices(true)
@@ -121,14 +133,14 @@
 		<div>执行{{ currentStepName }}任务</div>
 		<div>执行进度{{ curTime }}/{{ runTime }}</div>
 	</div>
-	<div class="tool-container">
-		<div style="font-size: 20px" class="show-screen">
+	<div class="tool-container" :style="{ display: isVertical ? 'block' : 'flex' }">
+		<div :style="{ width: isVertical ? '100vw' : '40vw' }" class="show-screen">
 			<div class="img-container">
-				<img @click="tapScreenImg" :src="showImgUrl" alt="" />
+				<img @click="tapScreenImg" @load="imgLoadFunc" :style="imgCss" :src="showImgUrl" alt="" />
 				<div class="mouse-point" v-if="showMousePoint"></div>
 			</div>
 		</div>
-		<div class="setting-container">
+		<div class="setting-container" :style="{ width: isVertical ? '100vw' : '60vw' }">
 			<div class="setting-cell">
 				<el-select
 					v-model="activeDeviceId"
@@ -244,8 +256,8 @@
 		height: 18px;
 		margin-right: 5px;
 	}
+
 	.tool-container {
-		display: flex;
 		width: 100vw;
 		height: 100vh;
 		font-size: 18px;
@@ -254,7 +266,6 @@
 		background-color: #f6f7f9;
 
 		.show-screen {
-			width: 40vw;
 			display: flex;
 			align-items: flex-start;
 			box-sizing: border-box;
@@ -266,6 +277,8 @@
 			.img-container {
 				position: relative;
 				display: inline-block;
+				box-sizing: border-box;
+				padding: 10px 0;
 
 				.mouse-point {
 					position: absolute;
@@ -277,14 +290,8 @@
 					background-color: red;
 				}
 			}
-
-			img {
-				margin: 0 auto;
-				width: 250px;
-			}
 		}
 		.setting-container {
-			width: 60vw;
 			display: flex;
 			align-items: center;
 			flex-direction: column;
