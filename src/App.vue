@@ -50,7 +50,7 @@
 		}
 		await runTapHandler(mousePoint.value)
 		currentStep.value.points.push({ x: mousePoint.value.x, y: mousePoint.value.y })
-		setTimeout(refreshImg, 300)
+		setTimeout(refreshImg, 1000)
 	}
 
 	/**
