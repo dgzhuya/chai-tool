@@ -15,7 +15,6 @@
 	import useDevices, { activeDeviceId, deviceList } from '@/effcet/devices'
 	import { TapStep } from './types/tap'
 
-	const imgDOM = ref<HTMLImageElement>()
 	const currentStepName = ref<string>('')
 	const { checkAdbDevices, noDeviceHandler } = useDevices()
 	const { showImgUrl, refreshImg } = useScreen(defaultSvg)
@@ -140,7 +139,10 @@
 				<div class="mouse-point" v-if="showMousePoint"></div>
 			</div>
 		</div>
-		<div class="setting-container" :style="{ width: isVertical ? '100vw' : '60vw' }">
+		<div
+			class="setting-container"
+			:style="{ width: isVertical ? '100vw' : '60vw', marginTop: isVertical ? '10px' : '0' }"
+		>
 			<div class="setting-cell">
 				<el-select
 					v-model="activeDeviceId"
@@ -277,8 +279,6 @@
 			.img-container {
 				position: relative;
 				display: inline-block;
-				box-sizing: border-box;
-				padding: 10px 0;
 
 				.mouse-point {
 					position: absolute;
