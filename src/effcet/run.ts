@@ -19,10 +19,9 @@ export default function run() {
 			return
 		}
 		const { id, wm } = activeDevice.value
-		const x = (wm.width * mousePoint.x) / 100
-		const y = (wm.height * mousePoint.y) / 100
-		const config = { x: mousePoint.isVertical ? y : x, y: mousePoint.isVertical ? x : y }
-		await tapHandler(id, config)
+		const x = mousePoint.isVertical ? (wm.height * (100 - mousePoint.y)) / 100 : (wm.width * mousePoint.x) / 100
+		const y = mousePoint.isVertical ? (wm.width * (100 - mousePoint.x)) / 100 : (wm.height * mousePoint.y) / 100
+		tapHandler(id, { x, y })
 	}
 
 	const execStepsHandler = async (points: Point[]) => {
